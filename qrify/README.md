@@ -170,4 +170,3 @@ Tested and compatible across all modern desktop and mobile browsers:
 
 Developed as a showcase frontend engineering project.  
 **QRify — Generate. Customize. Share.**
-"# QRify_QRcode_Generator" 

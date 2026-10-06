@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QRify — Free QR Code Generator</title>
+  <meta name="description" content="Generate customizable QR codes instantly for URLs, text, email, phone numbers, and Wi-Fi. Free, fast, private, and no account required.">
+  <meta name="keywords" content="QR code generator, free QR code, custom QR code, SVG QR code, client-side QR generator, Wi-Fi QR code">
+  <meta name="author" content="QRify">
+  
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="QRify — Free QR Code Generator">
+  <meta property="og:description" content="Generate beautiful, customizable QR codes instantly in your browser. 100% private, no backend, no tracking.">
+  <meta property="og:image" content="assets/logo/qrify-logo.svg">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/logo/qrify-logo.svg">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Navigation Bar -->
+  <header class="navbar" id="topNav">
+    <div class="nav-container">
+      <a href="#top" class="brand-logo" aria-label="QRify Home">
+        <img src="assets/logo/qrify-logo.svg" alt="QRify Logo" class="brand-icon" width="38" height="38">
+        <div class="brand-text">
+          <span class="brand-name">QRify</span>
+          <span class="brand-badge">Client-Side</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="nav-links" aria-label="Main Navigation">
+        <a href="#generator" class="nav-link active">Generator</a>
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#how-it-works" class="nav-link">How It Works</a>
+        <a href="#history" class="nav-link">
+          History
+          <span id="historyNavBadge" class="nav-count-badge hidden">0</span>
+        </a>
+        <a href="#about" class="nav-link">About</a>
+      </nav>
+
+      <!-- Nav Actions (Theme Toggle & Mobile Menu) -->
+      <div class="nav-actions">
+        <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle dark/light mode" title="Toggle theme">
+          <svg class="theme-icon sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2"></path>
+            <path d="M12 20v2"></path>
+            <path d="m4.93 4.93 1.41 1.41"></path>
+            <path d="m17.66 17.66 1.41 1.41"></path>
+            <path d="M2 12h2"></path>
+            <path d="M20 12h2"></path>
+            <path d="m6.34 17.66-1.41 1.41"></path>
+            <path d="m19.07 4.93-1.41 1.41"></path>
+          </svg>
+          <svg class="theme-icon moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+          </svg>
+        </button>
+
+        <a href="#generator" class="btn btn-primary btn-sm nav-cta">
+          <span>Create QR</span>
+        </a>
+
+        <!-- Mobile Hamburger Button -->
+        <button id="mobileMenuBtn" class="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobileDrawer">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer Menu -->
+    <div id="mobileDrawer" class="mobile-drawer" aria-hidden="true">
+      <div class="mobile-drawer-content">
+        <nav class="mobile-nav-links">
+          <a href="#generator" class="mobile-nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 7h.01"/><path d="M17 7h.01"/><path d="M7 17h.01"/><path d="M17 17h.01"/></svg>
+            Generator
+          </a>
+          <a href="#features" class="mobile-nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+            Features
+          </a>
+          <a href="#how-it-works" class="mobile-nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+            How It Works
+          </a>
+          <a href="#history" class="mobile-nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
+            History
+            <span id="mobileHistoryBadge" class="nav-count-badge hidden">0</span>
+          </a>
+          <a href="#about" class="mobile-nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+            About
+          </a>
+        </nav>
+        <div class="mobile-drawer-footer">
+          <a href="#generator" class="btn btn-primary btn-block">Generate QR Code</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="mainContent">
+    <!-- Hero Section -->
+    <section class="hero-section" id="top">
+      <div class="container hero-container">
+        <div class="hero-badge-pill">
+          <span class="badge-spark">✨</span>
+          <span>100% Client-Side • Zero Data Collected</span>
+        </div>
+        <h1 class="hero-title">
+          <span class="brand-gradient-text">QRify</span>
+          <span class="hero-tagline">Generate. Customize. Share.</span>
+        </h1>
+        <p class="hero-description">
+          Create beautiful QR codes instantly — no account required.
+        </p>
+        <div class="hero-actions">
+          <a href="#generator" class="btn btn-primary btn-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <span>Create Your QR Code</span>
+          </a>
+          <a href="#how-it-works" class="btn btn-secondary btn-lg">
+            <span>Learn How It Works</span>
+          </a>
+        </div>
+
+        <div class="hero-highlights">
+          <div class="highlight-item">
+            <span class="highlight-icon">🔒</span>
+            <span class="highlight-text">100% Private (No Cloud Storage)</span>
+          </div>
+          <div class="highlight-item">
+            <span class="highlight-icon">⚡</span>
+            <span class="highlight-text">Instant PNG &amp; Scalable SVG</span>
+          </div>
+          <div class="highlight-item">
+            <span class="highlight-icon">🎨</span>
+            <span class="highlight-text">Custom Colors &amp; Logo Overlay</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- QR Generator Section -->
+    <section class="generator-section" id="generator">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="section-tag">Interactive Studio</span>
+          <h2 class="section-title">QR Code Generator</h2>
+          <p class="section-subtitle">Choose your format, enter your content, and style your QR code in real time.</p>
+        </div>
+
+        <!-- Two Column Generator Layout -->
+        <div class="generator-layout">
+          <!-- Left Column: Inputs & Customization -->
+          <div class="generator-left">
+            <!-- Format Tabs / Segmented Control -->
+            <div class="card format-card">
+              <label class="card-title-label">Select QR Code Type</label>
+              <div class="format-tabs" role="tablist" aria-label="QR Code Input Types">
+                <button type="button" class="format-tab active" role="tab" aria-selected="true" aria-controls="urlTabPane" id="tab-url" data-tab="url">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                  <span>URL</span>
+                </button>
+                <button type="button" class="format-tab" role="tab" aria-selected="false" aria-controls="textTabPane" id="tab-text" data-tab="text">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 6.1H3"/><path d="M21 12.1H3"/><path d="M15.1 18H3"/></svg>
+                  <span>Text</span>
+                </button>
+                <button type="button" class="format-tab" role="tab" aria-selected="false" aria-controls="emailTabPane" id="tab-email" data-tab="email">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                  <span>Email</span>
+                </button>
+                <button type="button" class="format-tab" role="tab" aria-selected="false" aria-controls="phoneTabPane" id="tab-phone" data-tab="phone">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  <span>Phone</span>
+                </button>
+                <button type="button" class="format-tab" role="tab" aria-selected="false" aria-controls="wifiTabPane" id="tab-wifi" data-tab="wifi">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h.01"/><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.859a10 10 0 0 1 14 0"/><path d="M8.5 16.429a5 5 0 0 1 7 0"/></svg>
+                  <span>Wi-Fi</span>
+                </button>
+              </div>
+
+              <!-- Content Input Panes -->
+              <form id="qrInputForm" class="input-form" onsubmit="return false;" novalidate>
+                <!-- URL Pane -->
+                <div class="tab-pane active" id="urlTabPane" role="tabpanel" aria-labelledby="tab-url">
+                  <div class="form-group">
+                    <label for="urlInput" class="form-label">
+                      <span>Website URL</span>
+                      <span class="required-indicator">*</span>
+                    </label>
+                    <div class="input-with-icon">
+                      <span class="input-leading-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                      </span>
+                      <input type="url" id="urlInput" class="form-control" placeholder="https://example.com" value="https://example.com" autocomplete="off" spellcheck="false">
+                      <button type="button" class="input-clear-btn" aria-label="Clear URL" title="Clear">✕</button>
+                    </div>
+                    <div class="input-feedback" id="urlFeedback"></div>
+                    <p class="form-helper-text">Enter any valid web link, portfolio, social page, or document URL.</p>
+                  </div>
+                </div>
+
+                <!-- Plain Text Pane -->
+                <div class="tab-pane" id="textTabPane" role="tabpanel" aria-labelledby="tab-text">
+                  <div class="form-group">
+                    <div class="label-row">
+                      <label for="textInput" class="form-label">
+                        <span>Plain Text Message</span>
+                        <span class="required-indicator">*</span>
+                      </label>
+                      <span class="char-counter" id="textCharCounter">0 / 1000</span>
+                    </div>
+                    <textarea id="textInput" class="form-control textarea-control" rows="4" maxlength="1000" placeholder="Type or paste any note, message, or information here..."></textarea>
+                    <div class="input-feedback" id="textFeedback"></div>
+                    <p class="form-helper-text">Plain text can be scanned and viewed instantly by any camera or QR scanner.</p>
+                  </div>
+                </div>
+
+                <!-- Email Pane -->
+                <div class="tab-pane" id="emailTabPane" role="tabpanel" aria-labelledby="tab-email">
+                  <div class="form-group">
+                    <label for="emailAddressInput" class="form-label">
+                      <span>Email Address</span>
+                      <span class="required-indicator">*</span>
+                    </label>
+                    <div class="input-with-icon">
+                      <span class="input-leading-icon">@</span>
+                      <input type="email" id="emailAddressInput" class="form-control" placeholder="hello@company.com" autocomplete="email">
+                    </div>
+                    <div class="input-feedback" id="emailAddressFeedback"></div>
+                  </div>
+                  <div class="form-group">
+                    <label for="emailSubjectInput" class="form-label">Subject Line (Optional)</label>
+                    <input type="text" id="emailSubjectInput" class="form-control" placeholder="Inquiry from website">
+                  </div>
+                  <div class="form-group">
+                    <label for="emailBodyInput" class="form-label">Message Body (Optional)</label>
+                    <textarea id="emailBodyInput" class="form-control textarea-control" rows="3" placeholder="Hi there, I would like to get in touch..."></textarea>
+                  </div>
+                </div>
+
+                <!-- Phone Pane -->
+                <div class="tab-pane" id="phoneTabPane" role="tabpanel" aria-labelledby="tab-phone">
+                  <div class="form-group">
+                    <label for="phoneInput" class="form-label">
+                      <span>Phone Number</span>
+                      <span class="required-indicator">*</span>
+                    </label>
+                    <div class="input-with-icon">
+                      <span class="input-leading-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                      </span>
+                      <input type="tel" id="phoneInput" class="form-control" placeholder="+1 (555) 000-0000" autocomplete="tel">
+                    </div>
+                    <div class="input-feedback" id="phoneFeedback"></div>
+                    <p class="form-helper-text">Include your country code for international compatibility (e.g. +1, +44, +20).</p>
+                  </div>
+                </div>
+
+                <!-- Wi-Fi Pane -->
+                <div class="tab-pane" id="wifiTabPane" role="tabpanel" aria-labelledby="tab-wifi">
+                  <div class="form-group">
+                    <label for="wifiSsidInput" class="form-label">
+                      <span>Network Name (SSID)</span>
+                      <span class="required-indicator">*</span>
+                    </label>
+                    <input type="text" id="wifiSsidInput" class="form-control" placeholder="Office-Guest-WiFi" autocomplete="off">
+                    <div class="input-feedback" id="wifiSsidFeedback"></div>
+                  </div>
+
+                  <div class="form-row-2">
+                    <div class="form-group">
+                      <label for="wifiSecuritySelect" class="form-label">Security Type</label>
+                      <select id="wifiSecuritySelect" class="form-select">
+                        <option value="WPA" selected>WPA / WPA2 / WPA3</option>
+                        <option value="WEP">WEP</option>
+                        <option value="nopass">None (Open Network)</option>
+                      </select>
+                    </div>
+
+                    <div class="form-group" id="wifiPasswordGroup">
+                      <label for="wifiPasswordInput" class="form-label">Network Password</label>
+                      <div class="input-with-icon">
+                        <input type="password" id="wifiPasswordInput" class="form-control" placeholder="Wi-Fi Password" autocomplete="off">
+                        <button type="button" id="wifiTogglePasswordBtn" class="input-icon-btn" aria-label="Toggle password visibility">
+                          <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-check-inline">
+                    <input type="checkbox" id="wifiHiddenCheckbox" class="form-checkbox">
+                    <label for="wifiHiddenCheckbox" class="checkbox-label">Hidden Network (SSID is not broadcast)</label>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <!-- Customization Panel -->
+            <div class="card customization-card">
+              <div class="customization-header">
+                <div class="custom-title-wrap">
+                  <span class="custom-icon">🎨</span>
+                  <h3 class="custom-title">QR Code Customization</h3>
+                </div>
+                <button type="button" id="resetCustomizationBtn" class="btn btn-ghost btn-sm" title="Restore default styling">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                  <span>Reset Options</span>
+                </button>
+              </div>
+
+              <!-- Color Customization Group -->
+              <div class="custom-section">
+                <div class="section-sub-header">
+                  <h4 class="custom-subheading">Colors</h4>
+                  <button type="button" id="resetColorsBtn" class="subtle-link-btn">Reset Colors</button>
+                </div>
+
+                <div class="color-pickers-grid">
+                  <!-- Foreground Color -->
+                  <div class="color-picker-item">
+                    <label for="fgColorPicker" class="color-label">Foreground (Dots &amp; Shape)</label>
+                    <div class="color-input-combo">
+                      <div class="color-swatch-wrapper">
+                        <input type="color" id="fgColorPicker" class="color-native-input" value="#0f172a" aria-label="Foreground color picker">
+                        <span class="color-swatch-preview" id="fgColorPreview" style="background-color: #0f172a;"></span>
+                      </div>
+                      <input type="text" id="fgColorHex" class="form-control color-hex-input" value="#0f172a" maxlength="7" spellcheck="false">
+                    </div>
+                    <!-- Quick Palettes -->
+                    <div class="swatches-quick" id="fgSwatches">
+                      <button type="button" class="swatch-btn active" data-color="#0f172a" style="background-color: #0f172a;" title="Black"></button>
+                      <button type="button" class="swatch-btn" data-color="#4f46e5" style="background-color: #4f46e5;" title="Indigo"></button>
+                      <button type="button" class="swatch-btn" data-color="#059669" style="background-color: #059669;" title="Emerald"></button>
+                      <button type="button" class="swatch-btn" data-color="#7c3aed" style="background-color: #7c3aed;" title="Violet"></button>
+                      <button type="button" class="swatch-btn" data-color="#e11d48" style="background-color: #e11d48;" title="Ruby"></button>
+                      <button type="button" class="swatch-btn" data-color="#0284c7" style="background-color: #0284c7;" title="Cyan"></button>
+                    </div>
+                  </div>
+
+                  <!-- Background Color -->
+                  <div class="color-picker-item">
+                    <label for="bgColorPicker" class="color-label">Background</label>
+                    <div class="color-input-combo">
+                      <div class="color-swatch-wrapper">
+                        <input type="color" id="bgColorPicker" class="color-native-input" value="#ffffff" aria-label="Background color picker">
+                        <span class="color-swatch-preview" id="bgColorPreview" style="background-color: #ffffff;"></span>
+                      </div>
+                      <input type="text" id="bgColorHex" class="form-control color-hex-input" value="#ffffff" maxlength="7" spellcheck="false">
+                    </div>
+                    <!-- Quick Palettes -->
+                    <div class="swatches-quick" id="bgSwatches">
+                      <button type="button" class="swatch-btn active" data-color="#ffffff" style="background-color: #ffffff;" title="White"></button>
+                      <button type="button" class="swatch-btn" data-color="#f8fafc" style="background-color: #f8fafc;" title="Soft Gray"></button>
+                      <button type="button" class="swatch-btn" data-color="#fef3c7" style="background-color: #fef3c7;" title="Warm Cream"></button>
+                      <button type="button" class="swatch-btn" data-color="#ecfdf5" style="background-color: #ecfdf5;" title="Mint"></button>
+                      <button type="button" class="swatch-btn" data-color="#f5f3ff" style="background-color: #f5f3ff;" title="Lavender"></button>
+                      <button type="button" class="swatch-btn" data-color="#0f172a" style="background-color: #0f172a;" title="Dark"></button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Contrast Warning Banner -->
+                <div id="contrastWarning" class="contrast-warning-banner hidden">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  <span>Caution: Contrast between foreground and background is low. Some scanners might struggle to read this code.</span>
+                </div>
+              </div>
+
+              <!-- Size, Margin & Error Correction -->
+              <div class="custom-section">
+                <div class="form-row-3">
+                  <!-- Size Selection -->
+                  <div class="form-group">
+                    <label class="form-label" id="sizeLabel">QR Size</label>
+                    <div class="segmented-control" role="group" aria-labelledby="sizeLabel">
+                      <button type="button" class="seg-btn" data-size="240">Small</button>
+                      <button type="button" class="seg-btn active" data-size="320">Medium</button>
+                      <button type="button" class="seg-btn" data-size="480">Large</button>
+                    </div>
+                  </div>
+
+                  <!-- Margin / Padding -->
+                  <div class="form-group">
+                    <div class="label-row">
+                      <label for="marginRange" class="form-label">Margin</label>
+                      <span id="marginValueDisplay" class="value-badge">10px</span>
+                    </div>
+                    <input type="range" id="marginRange" min="0" max="30" step="5" value="10" class="form-range">
+                  </div>
+
+                  <!-- Error Correction Level -->
+                  <div class="form-group">
+                    <label for="eccSelect" class="form-label">
+                      <span>Error Correction</span>
+                      <span class="tooltip-trigger" title="Higher levels allow QR code to be read even if partially covered or damaged. High is recommended when using a logo.">ℹ️</span>
+                    </label>
+                    <select id="eccSelect" class="form-select">
+                      <option value="L">Low (7% recovery)</option>
+                      <option value="M">Medium (15% recovery)</option>
+                      <option value="Q" selected>Quartile (25% recovery)</option>
+                      <option value="H">High (30% recovery - Best with Logo)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Dot & Corner Style -->
+              <div class="custom-section">
+                <div class="form-row-2">
+                  <div class="form-group">
+                    <label for="dotStyleSelect" class="form-label">Dot Style</label>
+                    <select id="dotStyleSelect" class="form-select">
+                      <option value="square">Standard Square</option>
+                      <option value="rounded" selected>Smooth Rounded</option>
+                      <option value="dots">Modern Dots</option>
+                      <option value="classy">Classy Rounded</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="cornerSquareSelect" class="form-label">Corner Pattern</label>
+                    <select id="cornerSquareSelect" class="form-select">
+                      <option value="square">Square</option>
+                      <option value="extra-rounded" selected>Extra Rounded</option>
+                      <option value="dot">Dot</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Logo Upload & Management -->
+              <div class="custom-section">
+                <div class="section-sub-header">
+                  <h4 class="custom-subheading">Center Logo / Icon (Optional)</h4>
+                  <span class="sub-helper-note">Supports PNG, JPG, JPEG, WEBP (Max 2MB)</span>
+                </div>
+
+                <!-- Dropzone / File Picker -->
+                <div class="logo-dropzone" id="logoDropzone">
+                  <input type="file" id="logoFileInput" class="logo-file-input" accept="image/png, image/jpeg, image/jpg, image/webp" aria-label="Upload logo image">
+                  
+                  <!-- Empty Logo State -->
+                  <div class="dropzone-idle" id="logoIdleState">
+                    <div class="dropzone-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    </div>
+                    <div class="dropzone-text">
+                      <span class="dropzone-prompt"><strong>Click to upload</strong> or drag &amp; drop your logo</span>
+                      <span class="dropzone-limits">PNG, JPG, JPEG, WEBP up to 2MB</span>
+                    </div>
+                  </div>
+
+                  <!-- Active Logo State -->
+                  <div class="logo-active-preview hidden" id="logoActiveState">
+                    <div class="logo-thumb-wrap">
+                      <img id="logoPreviewImg" src="" alt="Uploaded Logo Preview" class="logo-thumb">
+                    </div>
+                    <div class="logo-meta">
+                      <span id="logoFileName" class="logo-name">logo.png</span>
+                      <span id="logoFileSize" class="logo-size">45 KB</span>
+                      <span class="logo-status-badge">Centered on QR</span>
+                    </div>
+                    <button type="button" id="removeLogoBtn" class="btn btn-danger btn-sm" title="Remove logo">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                      <span>Remove Logo</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Sample Logo Badges for Quick Testing -->
+                <div class="sample-logos-wrap">
+                  <span class="sample-logos-label">Or choose a quick preset icon:</span>
+                  <div class="sample-logos-buttons">
+                    <button type="button" class="sample-logo-chip" data-sample="assets/logo/sample-globe.svg" title="Web Globe">
+                      <img src="assets/logo/sample-globe.svg" alt="Globe" width="20" height="20">
+                      <span>Globe</span>
+                    </button>
+                    <button type="button" class="sample-logo-chip" data-sample="assets/logo/sample-wifi.svg" title="Wi-Fi Icon">
+                      <img src="assets/logo/sample-wifi.svg" alt="WiFi" width="20" height="20">
+                      <span>Wi-Fi</span>
+                    </button>
+                    <button type="button" class="sample-logo-chip" data-sample="assets/logo/sample-star.svg" title="Star Icon">
+                      <img src="assets/logo/sample-star.svg" alt="Star" width="20" height="20">
+                      <span>Star</span>
+                    </button>
+                    <button type="button" class="sample-logo-chip" data-sample="assets/logo/sample-heart.svg" title="Heart Icon">
+                      <img src="assets/logo/sample-heart.svg" alt="Heart" width="20" height="20">
+                      <span>Heart</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Main Generation Trigger Button -->
+              <div class="generator-cta-row">
+                <button type="button" id="generateQrBtn" class="btn btn-primary btn-xl btn-generate">
+                  <span class="btn-spinner hidden" id="generateSpinner"></span>
+                  <svg class="btn-lightning-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                  <span id="generateBtnText">Generate QR Code</span>
+                </button>
+                <div class="auto-update-toggle-wrap">
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="autoUpdateToggle" checked>
+                    <span class="toggle-slider"></span>
+                  </label>
+                  <label for="autoUpdateToggle" class="toggle-label-text">Auto-refresh preview on style change</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Live QR Preview Card (Sticky on Desktop) -->
+          <div class="generator-right">
+            <div class="preview-sticky-wrap">
+              <div class="card preview-card" id="previewCard">
+                <!-- Preview Header -->
+                <div class="preview-header">
+                  <div class="preview-status-indicator">
+                    <span class="status-dot pulse"></span>
+                    <span class="status-text" id="previewStatusText">Live Preview</span>
+                  </div>
+                  <div class="preview-badges">
+                    <span id="previewTypeBadge" class="badge-tag badge-indigo">URL</span>
+                    <span id="previewEccBadge" class="badge-tag badge-neutral">ECC: Q</span>
+                  </div>
+                </div>
+
+                <!-- QR Display Stage -->
+                <div class="qr-stage" id="qrStage">
+                  <!-- Empty State (Initial) -->
+                  <div class="qr-empty-state hidden" id="qrEmptyState">
+                    <div class="empty-icon-wrap">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="empty-qr-svg">
+                        <rect width="5" height="5" x="3" y="3" rx="1"/>
+                        <rect width="5" height="5" x="16" y="3" rx="1"/>
+                        <rect width="5" height="5" x="3" y="16" rx="1"/>
+                        <path d="M21 16h-3a2 2 0 0 0-2 2v3"/>
+                        <path d="M21 21v.01"/>
+                        <path d="M12 7v3a2 2 0 0 1-2 2H7"/>
+                        <path d="M3 12h.01"/>
+                        <path d="M12 3h.01"/>
+                        <path d="M12 16v.01"/>
+                        <path d="M16 12h1"/>
+                        <path d="M21 12v.01"/>
+                        <path d="M12 21v-1"/>
+                      </svg>
+                    </div>
+                    <h4 class="empty-title">Ready to Generate</h4>
+                    <p class="empty-desc">Enter your content on the left and click <strong>“Generate QR Code”</strong> to see your code.</p>
+                  </div>
+
+                  <!-- Active Rendering Stage -->
+                  <div class="qr-canvas-wrapper" id="qrCanvasWrapper">
+                    <div id="qrCodeContainer" class="qr-code-render-target"></div>
+                  </div>
+
+                  <!-- Loading Overlay -->
+                  <div class="qr-loading-overlay hidden" id="qrLoadingOverlay">
+                    <div class="spinner-ring"></div>
+                    <span>Rendering crisp vector QR...</span>
+                  </div>
+                </div>
+
+                <!-- QR Payload & Metadata Strip -->
+                <div class="qr-meta-strip" id="qrMetaStrip">
+                  <div class="meta-content-row">
+                    <span class="meta-label">Payload:</span>
+                    <span id="metaContentText" class="meta-value font-mono">https://example.com</span>
+                  </div>
+                  <div class="meta-specs-row">
+                    <span id="metaDimensions" class="meta-spec">320 × 320 px</span>
+                    <span class="meta-divider">•</span>
+                    <span id="metaFormat" class="meta-spec">Vector Matrix</span>
+                  </div>
+                </div>
+
+                <!-- Action Buttons Grid -->
+                <div class="preview-actions-grid">
+                  <button type="button" id="downloadPngBtn" class="btn btn-primary btn-download" title="Export as raster image">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    <span>Download PNG</span>
+                  </button>
+
+                  <button type="button" id="downloadSvgBtn" class="btn btn-secondary btn-download" title="Export as infinite resolution vector SVG">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m14 3-5.5 14L3 12"/><path d="m21 10-6 10"/></svg>
+                    <span>Download SVG</span>
+                  </button>
+
+                  <button type="button" id="copyContentBtn" class="btn btn-outline" title="Copy payload content to clipboard">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                    <span>Copy Content</span>
+                  </button>
+
+                  <button type="button" id="copyImageBtn" class="btn btn-outline" title="Copy QR image to clipboard">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                    <span>Copy QR Image</span>
+                  </button>
+                </div>
+
+                <!-- Client-Side Privacy Message -->
+                <div class="preview-privacy-banner">
+                  <div class="privacy-shield-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  </div>
+                  <p class="privacy-text">
+                    <strong>Your data stays in your browser.</strong> QRify does not upload or store your content on a server.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- History Section -->
+    <section class="history-section" id="history">
+      <div class="container">
+        <div class="history-section-header">
+          <div>
+            <div class="section-tag">Recent Generations</div>
+            <h2 class="section-title">QR Code History</h2>
+            <p class="section-subtitle">Codes generated in this session are stored locally in your browser’s localStorage.</p>
+          </div>
+          <div class="history-controls">
+            <span id="historyCounterBadge" class="badge-count">0 items saved</span>
+            <button type="button" id="clearAllHistoryBtn" class="btn btn-danger-outline btn-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+              <span>Clear All History</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- History Items Grid -->
+        <div class="history-grid" id="historyGrid"></div>
+
+        <!-- History Empty State -->
+        <div class="history-empty-card" id="historyEmptyState">
+          <div class="empty-icon-circle">
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+          </div>
+          <h3 class="empty-history-title">No Generated QR Codes Yet</h3>
+          <p class="empty-history-desc">As soon as you create QR codes with QRify, they will appear here so you can re-load, copy, or download them at any time.</p>
+          <a href="#generator" class="btn btn-primary btn-sm">Create First QR Code</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works-section" id="how-it-works">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="section-tag">Simple &amp; Frictionless</span>
+          <h2 class="section-title">How QRify Works</h2>
+          <p class="section-subtitle">Generate production-ready QR codes in three straightforward steps.</p>
+        </div>
+
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-number-badge">01</div>
+            <div class="step-icon-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+            </div>
+            <h3 class="step-title">Enter your content</h3>
+            <p class="step-text">Choose between URL, plain text, email, phone number, or Wi-Fi credentials. Fill in the validated fields.</p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number-badge">02</div>
+            <div class="step-icon-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+            </div>
+            <h3 class="step-title">Customize your QR code</h3>
+            <p class="step-text">Fine-tune colors, size, quiet zone margins, error correction, and optionally embed your brand logo.</p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number-badge">03</div>
+            <div class="step-icon-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </div>
+            <h3 class="step-title">Download and share</h3>
+            <p class="step-text">Export instantly in high-resolution PNG or vector SVG format, copy the payload, or copy the image directly to your clipboard.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section" id="features">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="section-tag">Engineered for Quality</span>
+          <h2 class="section-title">Built with Powerful Features</h2>
+          <p class="section-subtitle">Everything you need from a modern QR generator without bloat or subscription paywalls.</p>
+        </div>
+
+        <div class="features-grid">
+          <!-- Feature 1 -->
+          <div class="feature-card">
+            <div class="feature-icon-badge">⚡</div>
+            <h3 class="feature-title">Instant Generation</h3>
+            <p class="feature-desc">Generate QR codes directly in your browser with zero latency and instantaneous visual feedback.</p>
+          </div>
+
+          <!-- Feature 2 -->
+          <div class="feature-card">
+            <div class="feature-icon-badge">🎨</div>
+            <h3 class="feature-title">Fully Customizable</h3>
+            <p class="feature-desc">Customize colors, size, margin, and logo to align perfectly with your personal or business branding.</p>
+          </div>
+
+          <!-- Feature 3 -->
+          <div class="feature-card">
+            <div class="feature-icon-badge">📂</div>
+            <h3 class="feature-title">Multiple Formats</h3>
+            <p class="feature-desc">Create QR codes for URLs, text, email, phone numbers, and Wi-Fi networks with automatic protocol formatting.</p>
+          </div>
+
+          <!-- Feature 4 -->
+          <div class="feature-card">
+            <div class="feature-icon-badge">🔒</div>
+            <h3 class="feature-title">Privacy First</h3>
+            <p class="feature-desc">Your content stays on your device. QRify operates completely in your browser without transmitting payloads anywhere.</p>
+          </div>
+
+          <!-- Feature 5 -->
+          <div class="feature-card">
+            <div class="feature-icon-badge">🚀</div>
+            <h3 class="feature-title">No Account Required</h3>
+            <p class="feature-desc">Start generating immediately. No sign-ups, no tracking cookies, and no annoying email paywalls.</p>
+          </div>
+
+          <!-- Feature 6 -->
+          <div class="feature-card">
+            <div class="feature-icon-badge">💾</div>
+            <h3 class="feature-title">Download Anywhere</h3>
+            <p class="feature-desc">Export your QR code as PNG or SVG with clean semantic filenames ready for print or web deployment.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section" id="about">
+      <div class="container">
+        <div class="about-card">
+          <div class="about-content">
+            <div class="section-tag">About The Platform</div>
+            <h2 class="about-title">Why QRify?</h2>
+            <p class="about-lead">
+              QRify is a lightweight browser-based QR Code Generator designed to make creating and customizing QR codes simple, fast, and private.
+            </p>
+            <p class="about-paragraph">
+              Traditional online QR generators frequently monetize by redirecting your links through centralized tracking servers, slapping arbitrary limits on high-res downloads, or bombarding users with advertising. QRify takes the opposite approach: 100% client-side computation, open web standards, complete privacy, and vector SVG exports for print perfection.
+            </p>
+            <div class="about-badges">
+              <span class="tech-pill">HTML5 Canvas &amp; SVG</span>
+              <span class="tech-pill">Zero Server Dependency</span>
+              <span class="tech-pill">Offline Capable</span>
+              <span class="tech-pill">Dark Mode Native</span>
+            </div>
+          </div>
+          <div class="about-visual">
+            <div class="about-qr-showcase">
+              <img src="assets/logo/qrify-logo.svg" alt="QRify Icon" width="120" height="120" class="showcase-logo">
+              <div class="showcase-tag">100% Client-Side Engine</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Clear History Modal -->
+  <dialog id="clearHistoryModal" class="app-modal" aria-labelledby="clearModalTitle">
+    <div class="modal-dialog-content">
+      <div class="modal-header">
+        <div class="modal-warning-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+        </div>
+        <div>
+          <h3 id="clearModalTitle" class="modal-title">Clear QR Code History?</h3>
+          <p class="modal-subtitle">This will remove all saved QR codes from your local browser storage. This action cannot be undone.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="cancelClearHistoryBtn" class="btn btn-secondary">Cancel</button>
+        <button type="button" id="confirmClearHistoryBtn" class="btn btn-danger">Yes, Clear History</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Privacy Details Modal -->
+  <dialog id="privacyModal" class="app-modal" aria-labelledby="privacyModalTitle">
+    <div class="modal-dialog-content">
+      <div class="modal-header">
+        <div class="modal-shield-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div>
+          <h3 id="privacyModalTitle" class="modal-title">Privacy Policy &amp; Architecture</h3>
+          <p class="modal-subtitle">How QRify protects your confidential information</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <p><strong>1. Zero Data Transmission:</strong> Every single QR code generated in QRify is rendered entirely within your browser's JavaScript engine. No payload, Wi-Fi password, or URL is ever transmitted across the network.</p>
+        <p><strong>2. Local History Only:</strong> When enabled, your history is stored solely inside your browser's isolated <code>localStorage</code> database on your local machine. It is never synced to any remote database.</p>
+        <p><strong>3. Works Completely Offline:</strong> You can disconnect your internet connection or save this page locally, and QRify will continue to function flawlessly.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="closePrivacyModalBtn" class="btn btn-primary">Understood</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-brand-header">
+            <img src="assets/logo/qrify-logo.svg" alt="QRify Logo" width="32" height="32" class="footer-logo">
+            <span class="footer-brand-name">QRify</span>
+          </div>
+          <p class="footer-tagline">Generate. Customize. Share.</p>
+          <p class="footer-mission">Lightweight browser-based QR code generation for individuals, designers, and developers.</p>
+        </div>
+
+        <div class="footer-nav-groups">
+          <div class="footer-col">
+            <span class="footer-heading">Product</span>
+            <ul class="footer-links">
+              <li><a href="#generator">Generator</a></li>
+              <li><a href="#features">Features</a></li>
+              <li><a href="#how-it-works">How It Works</a></li>
+              <li><a href="#history">Saved History</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <span class="footer-heading">Formats</span>
+            <ul class="footer-links">
+              <li><a href="#generator" onclick="window.switchTabTo && window.switchTabTo('url')">URL Links</a></li>
+              <li><a href="#generator" onclick="window.switchTabTo && window.switchTabTo('wifi')">Wi-Fi Networks</a></li>
+              <li><a href="#generator" onclick="window.switchTabTo && window.switchTabTo('email')">Email Messages</a></li>
+              <li><a href="#generator" onclick="window.switchTabTo && window.switchTabTo('phone')">Phone Numbers</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <span class="footer-heading">Legal &amp; Info</span>
+            <ul class="footer-links">
+              <li><a href="#about">About</a></li>
+              <li><a href="#privacy" id="footerPrivacyLink">Privacy</a></li>
+              <li><a href="#top">Back to Top ↑</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p class="footer-copy">
+          &copy; 2026 QRify. Built with HTML, CSS &amp; JavaScript.
+        </p>
+        <div class="footer-tech-tag">
+          <span class="tech-dot"></span>
+          <span>100% Client-Side • No Cookies • No Backend</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts: Vendor QR Library (Local first with fallback) -->
+  <script src="js/vendor/qr-code-styling.js"></script>
+  <!-- Fallback to CDN in case local fails or is moved -->
+  <script>
+    if (typeof QRCodeStyling === 'undefined') {
+      document.write('<script src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"><\/script>');
+    }
+  </script>
+  <!-- Main Application Script -->
+  <script src="js/script.js"></script>
+</body>
+</html>
