@@ -499,6 +499,23 @@ function bindEventListeners() {
     }
   });
 
+  // Responsive: Close mobile drawer when clicking outside navbar
+  document.addEventListener('click', (e) => {
+    if (DOM.mobileDrawer && DOM.mobileDrawer.classList.contains('open')) {
+      const topNav = document.getElementById('topNav');
+      if (topNav && !topNav.contains(e.target)) {
+        closeMobileMenu();
+      }
+    }
+  });
+
+  // Responsive: Auto-close mobile drawer when window expands to desktop size
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 1024 && DOM.mobileDrawer && DOM.mobileDrawer.classList.contains('open')) {
+      closeMobileMenu();
+    }
+  });
+
   // Global helper for footer jump buttons
   window.switchTabTo = (tabName) => {
     switchTab(tabName);
